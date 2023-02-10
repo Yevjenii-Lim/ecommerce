@@ -1,18 +1,13 @@
 from django.shortcuts import render
-from django.http import JsonResponse
-from .products import products
-from rest_framework.decorators import api_view
+
+from base.products import products
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .models import Product
-from .serializer import ProductSerializer
+from base.models import Product
+from django.contrib.auth.hashers import make_password
+from base.serializer import ProductSerializer
 
 
-@api_view(['GET'])
-def getRoutes(request):
-    routes = [
-        "api/products"
-    ]
-    return Response(routes)
 
 
 @api_view(['GET'])
@@ -21,9 +16,10 @@ def getProducts(request):
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 
+
+
 @api_view(['GET'])
 def getSingleProduct(request, pk):
     product = Product.objects.get(_id=pk)
     serializer = ProductSerializer(product, many=False)
     return Response(serializer.data)
-
